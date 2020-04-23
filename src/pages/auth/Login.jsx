@@ -97,7 +97,7 @@ function Login(props) {
       const data = '_q=' + response.data.token + ';'
       document.cookie = data + expired
 
-      props.history.push('/')
+      window.location.reload()
     } catch (e) {
       console.log(e)
     }

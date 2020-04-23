@@ -37,10 +37,13 @@ function App() {
         <MuiThemeProvider theme={theme}>
           {TOKEN === undefined ? null : <Header />}
           <Switch>
-            <Route exact path='/login' component={Login} />
             <Route exact path='/register' component={Register} />
 
-            <Route exact path='/' component={Home} />
+            <Route
+              exact
+              path='/'
+              component={TOKEN === undefined ? Login : Home}
+            />
             <Route exact path='/pembayaran' component={Pembayaran} />
             <Route exact path='/history' component={History} />
           </Switch>
