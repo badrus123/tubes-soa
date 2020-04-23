@@ -38,10 +38,10 @@ function App() {
           {TOKEN === undefined ? null : <Header />}
           <Switch>
             <Route exact path='/register' component={Register} />
-
             <Route
               exact
               path='/'
+              component={Login}
               component={TOKEN === undefined ? Login : Home}
             />
             <Route exact path='/pembayaran' component={Pembayaran} />

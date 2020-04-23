@@ -78,7 +78,6 @@ export default function Home() {
   if (product === null) {
     return <div>loading</div>
   }
-  console.log(product)
 
   return (
     <div className={classes.root}>
