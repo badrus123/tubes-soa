@@ -41,7 +41,7 @@ function App() {
             <Route exact path='/login' component={Login} />
             <Route
               exact
-              path='/home'
+              path='/'
               render={() =>
                 TOKEN !== undefined ? (
                   <Home />
@@ -93,7 +93,6 @@ function App() {
                 )
               }
             />
-            <Redirect from='/' to='/home' />
           </Switch>
           <Footer />
         </MuiThemeProvider>
