@@ -38,10 +38,27 @@ function App() {
           {TOKEN === undefined ? null : <Header />}
           <Switch>
             <Route exact path='/register' component={Register} />
-            <Route exact path='/login' component={Login} />
             <Route
               exact
-              path='/'
+              path='/login'
+              render={() =>
+                TOKEN === undefined ? (
+                  <Login />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/home',
+                      state: {
+                        active: 'home',
+                      },
+                    }}
+                  />
+                )
+              }
+            />
+            <Route
+              exact
+              path='/home'
               render={() =>
                 TOKEN !== undefined ? (
                   <Home />
@@ -93,6 +110,7 @@ function App() {
                 )
               }
             />
+            <Redirect from='/' to='/home' />
           </Switch>
           <Footer />
         </MuiThemeProvider>
