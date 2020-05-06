@@ -15,6 +15,7 @@ import MailIcon from '@material-ui/icons/Mail'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import gobils from '../assets/gobils.png'
+import Cookies from 'js-cookie'
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -116,8 +117,14 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem
+        onClick={() => {
+          Cookies.remove('_q')
+          window.location.reload()
+        }}
+      >
+        Logout
+      </MenuItem>
     </Menu>
   )
 

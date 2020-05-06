@@ -11,7 +11,8 @@ import axios from 'axios'
 import { TOKEN } from '../../utils'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
-import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+
 const useStyle = makeStyles(() => ({
   root: {
     padding: '30px',
@@ -32,6 +33,7 @@ const useStyle = makeStyles(() => ({
     justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
+    cursor: 'pointer',
   },
   paper: {
     padding: '24px',
@@ -41,16 +43,17 @@ const useStyle = makeStyles(() => ({
     flexDirection: 'column',
   },
 }))
-export default function Home() {
+function Home(props) {
   const classes = useStyle()
   const [product, setProduct] = useState(null)
+  const [kode, setKode] = useState({ id: null, data: null })
   useEffect(() => {
     async function fetchData() {
       const DataProduct = await axios(
-        'http://tubesweb-env.eba-iqzqkf3k.us-east-2.elasticbeanstalk.com/api/v1/get-all-produk',
+        'https://api-gobills.herokuapp.com/api/v1/get-all-produk',
         { headers: { Authorization: `Bearer ${TOKEN}` } },
       )
-      setProduct(DataProduct.data)
+      setProduct(DataProduct.data.data)
     }
 
     fetchData()
@@ -59,7 +62,7 @@ export default function Home() {
     superLargeDesktop: {
       // the naming can be any, depends on you.
       breakpoint: { max: 4000, min: 3000 },
-      items: 5,
+      items: 7,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -74,11 +77,38 @@ export default function Home() {
       items: 1,
     },
   }
+  const handleClick = (res) => {
+    setKode({ id: res.id_detail, data: res })
+  }
+  const handlePayment = () => {
+    if (kode.id !== null) {
+      axios
+        .post(
+          `https://api-gobills.herokuapp.com/api/v1/kode`,
+          {
+            id: kode.id,
+            kode: kode.data.id_detail,
+          },
+          { headers: { Authorization: `Bearer ${TOKEN}` } },
+        )
+        .then((response) => {
+          props.history.push({
+            pathname: '/pembayaran',
+            state: {
+              data: response.data.data[0],
+            },
+          })
+        })
+    }
+  }
 
   if (product === null) {
     return <div>loading</div>
   }
 
+  console.log(kode)
+
+  // return <div></div>
   return (
     <div className={classes.root}>
       <img src={promo} alt='promom' />
@@ -90,13 +120,22 @@ export default function Home() {
         {product &&
           product.map((res, i) => {
             return (
-              <div className={classes.divProduct} key={i}>
+              <div
+                className={classes.divProduct}
+                key={i}
+                onClick={() => handleClick(res)}
+                style={{
+                  border:
+                    kode.id === res.id_detail ? '2px solid #00AA13' : null,
+                }}
+              >
                 <img
                   src={res.gambar}
                   alt={res.nama_produk}
                   className={classes.gambar}
                 />
                 <Typography>{res.nama_produk}</Typography>
+                <Typography>{res.jenis_produk}</Typography>
               </div>
             )
           })}
@@ -104,15 +143,11 @@ export default function Home() {
       <Paper className={classes.paper}>
         <Typography variant='body1'>Nomor Meter</Typography>
         <TextField variant='outlined' fullWidth />
-        <Button
-          variant='contained'
-          color='primary'
-          component={Link}
-          to='/pembayaran'
-        >
+        <Button variant='contained' color='primary' onClick={handlePayment}>
           Lanjutkan
         </Button>
       </Paper>
     </div>
   )
 }
+export default withRouter(Home)

@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 import JWTDecode from 'jwt-decode'
 
-const Token = Cookies.get('_q')
+let Token = Cookies.get('_q')
 if (Token !== undefined) {
   const exp = JWTDecode(Token)
   const current_time = new Date().getTime() / 1000

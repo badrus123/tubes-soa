@@ -82,7 +82,7 @@ function Login(props) {
   const handleSubmit = async (event) => {
     try {
       const response = await axios.post(
-        `http://tubesweb-env.eba-iqzqkf3k.us-east-2.elasticbeanstalk.com/api/v1/login`,
+        `https://api-gobills.herokuapp.com/api/v1/login`,
         {
           email: state.email,
           password: state.password,
@@ -96,8 +96,7 @@ function Login(props) {
         ';'
       const data = '_q=' + response.data.token + ';'
       document.cookie = data + expired
-
-      window.location.reload()
+      props.history.push('/home')
     } catch (e) {
       console.log(e)
     }

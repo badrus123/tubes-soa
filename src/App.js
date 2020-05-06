@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core'
 import { ThemeProvider } from 'styled-components'
 import Footer from './component/Footer'
@@ -31,6 +31,8 @@ const theme = createMuiTheme({
 })
 
 function App() {
+  console.log(TOKEN)
+
   return (
     <div>
       <ThemeProvider theme={theme}>
@@ -38,14 +40,62 @@ function App() {
           {TOKEN === undefined ? null : <Header />}
           <Switch>
             <Route exact path='/register' component={Register} />
+            <Route exact path='/login' component={Login} />
             <Route
               exact
-              path='/'
-              component={Login}
-              component={TOKEN === undefined ? Login : Home}
+              path='/home'
+              render={() =>
+                TOKEN !== undefined ? (
+                  <Home />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/login',
+                      state: {
+                        active: 'login',
+                      },
+                    }}
+                  />
+                )
+              }
             />
-            <Route exact path='/pembayaran' component={Pembayaran} />
-            <Route exact path='/history' component={History} />
+            <Route
+              exact
+              path='/pembayaran'
+              render={() =>
+                TOKEN !== undefined ? (
+                  <pembayaran />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/login',
+                      state: {
+                        active: 'login',
+                      },
+                    }}
+                  />
+                )
+              }
+            />
+            <Route
+              exact
+              path='/history'
+              render={() =>
+                TOKEN !== undefined ? (
+                  <History />
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: '/login',
+                      state: {
+                        active: 'login',
+                      },
+                    }}
+                  />
+                )
+              }
+            />
+            <Redirect from='/' to='/login' />
           </Switch>
           <Footer />
         </MuiThemeProvider>

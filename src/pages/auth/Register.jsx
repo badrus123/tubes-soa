@@ -8,6 +8,9 @@ import {
 } from '@material-ui/core'
 import bgGojek from '../../assets/bgGojek.png'
 import gojek from '../../assets/gojek.png'
+import axios from 'axios'
+import { withRouter } from 'react-router-dom'
+
 const useStyle = makeStyles(() => ({
   divHeader: {
     display: 'flex',
@@ -62,12 +65,41 @@ const useStyle = makeStyles(() => ({
     alignItems: 'flex-end',
   },
 }))
-export default function Register() {
+function Register(props) {
   const classes = useStyle()
-  const [state, setState] = useState({ email: '', password: '' })
+  const [state, setState] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirm_password: '',
+    nohp: '',
+  })
 
   const handleChange = (name) => (event) => {
     setState({ ...state, [name]: event.target.value })
+  }
+  const handleSubmit = async (event) => {
+    try {
+      const response = await axios.post(
+        `https://api-gobills.herokuapp.com/api/v1/register`,
+        {
+          name: state.name,
+          email: state.email,
+          password: state.password,
+          password_confirmation: state.confirm_password,
+          notelp: state.nohp,
+        },
+      )
+
+      props.history.push({
+        pathname: '/login',
+        state: {
+          data: response.data,
+        },
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
   return (
     <div className={classes.root}>
@@ -91,6 +123,7 @@ export default function Register() {
                 type='email'
                 className={classes.TextField}
                 fullWidth
+                onChange={handleChange('email')}
               />
             </div>
             <div className={classes.formControl}>
@@ -103,6 +136,7 @@ export default function Register() {
                 type='text'
                 className={classes.TextField}
                 fullWidth
+                onChange={handleChange('name')}
               />
             </div>
             <div className={classes.formControl}>
@@ -115,6 +149,7 @@ export default function Register() {
                 type='password'
                 className={classes.TextField}
                 fullWidth
+                onChange={handleChange('password')}
               />
             </div>
             <div className={classes.formControl}>
@@ -127,6 +162,7 @@ export default function Register() {
                 type='password'
                 className={classes.TextField}
                 fullWidth
+                onChange={handleChange('confirm_password')}
               />
             </div>
             <div className={classes.formControl}>
@@ -139,9 +175,15 @@ export default function Register() {
                 type='text'
                 className={classes.TextField}
                 fullWidth
+                onChange={handleChange('nohp')}
               />
             </div>
-            <Button variant='contained' fullWidth color='primary'>
+            <Button
+              variant='contained'
+              fullWidth
+              color='primary'
+              onClick={handleSubmit}
+            >
               Sign up
             </Button>
           </Paper>
@@ -151,3 +193,5 @@ export default function Register() {
     </div>
   )
 }
+
+export default withRouter(Register)
