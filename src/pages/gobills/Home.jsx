@@ -46,7 +46,7 @@ const useStyle = makeStyles(() => ({
 function Home(props) {
   const classes = useStyle()
   const [product, setProduct] = useState(null)
-  const [kode, setKode] = useState({ id: null, data: null })
+  const [kode, setKode] = useState({ id: null, data: null, kode: 0 })
   useEffect(() => {
     async function fetchData() {
       const DataProduct = await axios(
@@ -78,7 +78,10 @@ function Home(props) {
     },
   }
   const handleClick = (res) => {
-    setKode({ id: res.id_detail, data: res })
+    setKode({ id: res.id_detail, data: res, kode: 0 })
+  }
+  const handleChange = (event) => {
+    setKode({ ...kode, kode: event.target.value })
   }
   const handlePayment = () => {
     if (kode.id !== null) {
@@ -87,7 +90,7 @@ function Home(props) {
           `https://api-gobills.herokuapp.com/api/v1/kode`,
           {
             id: kode.id,
-            kode: kode.data.id_detail,
+            kode: kode.kode,
           },
           { headers: { Authorization: `Bearer ${TOKEN}` } },
         )
@@ -105,8 +108,6 @@ function Home(props) {
   if (product === null) {
     return <div>loading</div>
   }
-
-  console.log(kode)
 
   // return <div></div>
   return (
@@ -142,7 +143,7 @@ function Home(props) {
       </Carousel>
       <Paper className={classes.paper}>
         <Typography variant='body1'>Nomor Meter</Typography>
-        <TextField variant='outlined' fullWidth />
+        <TextField variant='outlined' fullWidth onChange={handleChange} />
         <Button variant='contained' color='primary' onClick={handlePayment}>
           Lanjutkan
         </Button>

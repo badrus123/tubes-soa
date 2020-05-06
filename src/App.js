@@ -31,8 +31,6 @@ const theme = createMuiTheme({
 })
 
 function App() {
-  console.log(TOKEN)
-
   return (
     <div>
       <ThemeProvider theme={theme}>
@@ -64,7 +62,7 @@ function App() {
               path='/pembayaran'
               render={() =>
                 TOKEN !== undefined ? (
-                  <pembayaran />
+                  <Pembayaran />
                 ) : (
                   <Redirect
                     to={{
@@ -95,7 +93,7 @@ function App() {
                 )
               }
             />
-            <Redirect from='/' to='/login' />
+            <Redirect from='/' to='/home' />
           </Switch>
           <Footer />
         </MuiThemeProvider>

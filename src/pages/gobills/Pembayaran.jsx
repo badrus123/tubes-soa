@@ -35,10 +35,9 @@ function Pembayaran(props) {
         props.history.push({
           pathname: '/history',
         })
-        console.log(response)
       })
   }
-  console.log(data)
+
   return (
     <div className={classes.root}>
       <div className={classes.flex}>
@@ -63,11 +62,7 @@ function Pembayaran(props) {
         }}
       >
         <div className={classes.flex}>
-          <img
-            src={data && data.image_detail}
-            alt=''
-            style={{ width: '20vw' }}
-          />
+          <img src={data && data.gambar} alt='' style={{ width: '20vw' }} />
           <div style={{ marginLeft: '2rem' }}>
             <div className={classes.flex}>
               <div
@@ -79,7 +74,7 @@ function Pembayaran(props) {
                 }}
               />
               <Typography variant='h4' className={classes.title}>
-                {data && data.jenis_produk}
+                {data && data.nama_produk} - {data && data.jenis_produk}
               </Typography>
             </div>
             <div style={{ marginTop: '3rem' }}>
